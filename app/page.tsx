@@ -1,12 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import SignInButton from '../components/SignInButton';
+import { useEffect, useState, Suspense } from 'react';
+import SignInButton from '@/components/SignInButton';
 import UserProfile from '@/components/UserProfile';
 import { useSearchParams } from 'next/navigation';
 
-export default function HomePage() {
-  const [user, setUser] = useState<any>(null);
+type User = {
+  name: string;
+  login: string;
+  avatar: string;
+};
+
+function HomePageContent() {
+  const [user, setUser] = useState<User | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -22,10 +28,18 @@ export default function HomePage() {
   return (
     <main className="flex flex-col items-center justify-center min-h-screen p-4">
       {!user ? (
-        <SignInButton setUser={setUser} />
+        <SignInButton />
       ) : (
         <UserProfile user={user} />
       )}
     </main>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomePageContent />
+    </Suspense>
   );
 }

@@ -2,11 +2,7 @@
 
 import React from 'react';
 
-type Props = {
-  setUser: (user: any) => void;
-};
-
-export default function SignInButton({ setUser }: Props) {
+export default function SignInButton() {
   const handleSignIn = async () => {
     const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI ?? 'http://127.0.0.1:3000/api/auth/callback';
