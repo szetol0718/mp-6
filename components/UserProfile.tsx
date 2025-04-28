@@ -1,5 +1,6 @@
 'use client';
-import Image from 'next/image'; 
+
+import Image from 'next/image';
 
 type UserProps = {
   user: {
@@ -15,7 +16,9 @@ export default function UserProfile({ user }: UserProps) {
       <Image
         src={user.avatar}
         alt={`${user.name}'s avatar`}
-        className="w-24 h-24 rounded-full"
+        width={96}
+        height={96}
+        className="rounded-full"
       />
       <h2 className="text-xl font-bold">{user.name}</h2>
       <p className="text-gray-600">@{user.login}</p>
