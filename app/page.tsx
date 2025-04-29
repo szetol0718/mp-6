@@ -1,66 +1,43 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
-import SignInButton from '@/components/SignInButton';
-import GoogleSignInButton from '@/components/GoogleSignInButton';
-import UserProfile from '@/components/UserProfile';
-import { useSearchParams } from 'next/navigation';
-
-type User = {
-  name: string;
-  login: string;
-  avatar: string;
-  bio?: string;
-  location?: string;
-  blog?: string;
-};
-
-function HomePageContent() {
-  const [user, setUser] = useState<User | null>(null);
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const name = searchParams.get('name');
-    const avatar = searchParams.get('avatar');
-    const login = searchParams.get('login');
-    const bio = searchParams.get('bio');
-    const location = searchParams.get('location');
-    const blog = searchParams.get('blog');
-
-    if (name && avatar && login) {
-      setUser({
-        name,
-        avatar,
-        login,
-        bio: bio || '',
-        location: location || '',
-        blog: blog || '',
-      });
-    }
-  }, [searchParams]);
-
-  return (
-    <main className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100 text-gray-800">
-      <h1 className="text-3xl font-bold mb-6">Welcome to Louis Szeto OAuth Demo</h1>
-      {!user ? (
-        <div className="flex flex-col items-center gap-4">
-          <p className="mb-2 text-center">Choose a login provider to continue:</p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <SignInButton />
-            <GoogleSignInButton />
-          </div>
-        </div>
-      ) : (
-        <UserProfile user={user} />
-      )}
-    </main>
-  );
-}
+import { SessionProvider } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <SessionProvider>
       <HomePageContent />
-    </Suspense>
+    </SessionProvider>
+  );
+}
+
+function HomePageContent() {
+  const { data: session } = useSession();
+
+  if (session) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h2 className="text-2xl font-bold">Welcome, {session.user?.name}</h2>
+        <img src={session.user?.image ?? ''} alt="Avatar" className="w-24 h-24 rounded-full mt-4" />
+        <p className="text-gray-600">{session.user?.email}</p>
+        <button className="mt-6 bg-red-500 px-4 py-2 text-white rounded" onClick={() => signOut()}>
+          Sign out
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-3xl font-bold mb-6">Sign In</h1>
+      <div className="flex gap-4">
+        <button className="bg-black text-white px-4 py-2 rounded" onClick={() => signIn('github')}>
+          Sign in with GitHub
+        </button>
+        <button className="bg-red-600 text-white px-4 py-2 rounded" onClick={() => signIn('google')}>
+          Sign in with Google
+        </button>
+      </div>
+    </div>
   );
 }
