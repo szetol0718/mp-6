@@ -2,6 +2,7 @@
 
 import { SessionProvider } from "next-auth/react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import Image from "next/image";
 
 export default function HomePage() {
   return (
@@ -18,7 +19,15 @@ function HomePageContent() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h2 className="text-2xl font-bold">Welcome, {session.user?.name}</h2>
-        <img src={session.user?.image ?? ''} alt="Avatar" className="w-24 h-24 rounded-full mt-4" />
+        {session.user?.image && (
+          <Image
+            src={session.user.image}
+            alt="Avatar"
+            width={96}
+            height={96}
+            className="rounded-full mt-4"
+          />
+        )}
         <p className="text-gray-600">{session.user?.email}</p>
         <button className="mt-6 bg-red-500 px-4 py-2 text-white rounded" onClick={() => signOut()}>
           Sign out

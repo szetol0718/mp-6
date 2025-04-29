@@ -15,10 +15,10 @@ const handler = NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session }) {
       return session;
     },
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token}) {
       return token;
     },
   },
