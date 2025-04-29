@@ -15,32 +15,43 @@ type UserProps = {
 
 export default function UserProfile({ user }: UserProps) {
   return (
-    <div className="flex flex-col items-center gap-6 p-8 bg-white rounded-lg shadow-lg max-w-md mx-auto">
+    <div className="flex flex-col items-center gap-6 p-8 bg-white rounded-lg shadow-lg max-w-md mx-auto border border-gray-200">
       <Image
         src={user.avatar}
         alt={`${user.name}'s avatar`}
         width={120}
         height={120}
-        className="rounded-full"
+        className="rounded-full border"
       />
-      <div className="text-center">
-        <h2 className="text-2xl font-bold">{user.name}</h2>
-        <p className="text-gray-600">@{user.login}</p>
+      <div className="text-center space-y-3 w-full">
+        <div>
+          <h2 className="text-2xl font-bold">{user.name}</h2>
+          <p className="text-gray-500">@{user.login}</p>
+        </div>
         {user.bio && (
-          <p className="mt-2 text-gray-700 italic">{user.bio}</p>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-600">Bio</h3>
+            <p className="text-gray-700 italic">{user.bio}</p>
+          </div>
         )}
         {user.location && (
-          <p className="mt-2 text-gray-500">{user.location}</p>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-600">Location</h3>
+            <p className="text-gray-700">{user.location}</p>
+          </div>
         )}
         {user.blog && (
-          <a
-            href={user.blog.startsWith('http') ? user.blog : `https://${user.blog}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 text-blue-500 hover:underline block"
-          >
-            {user.blog}
-          </a>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-600">Website</h3>
+            <a
+              href={user.blog.startsWith('http') ? user.blog : `https://${user.blog}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              {user.blog}
+            </a>
+          </div>
         )}
       </div>
     </div>
